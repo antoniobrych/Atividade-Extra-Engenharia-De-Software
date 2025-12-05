@@ -72,11 +72,6 @@ class LeafNode(Node):
 
 
 class PreOrderIterator(Iterator[Node]):
-    """
-    Iterator que percorre a árvore em pré-ordem (raiz -> filhos).
-    Totalmente mock, mas imprime o fluxo de iteração.
-    """
-
     def __init__(self, root: Node) -> None:
         self._stack: List[Node] = [root]
         print("[PreOrderIterator] Inicializado com raiz:", root.name)
@@ -93,8 +88,49 @@ class PreOrderIterator(Iterator[Node]):
         print(f"[PreOrderIterator] Retornando nó '{current.name}' e empilhando filhos.")
 
         children = current.get_children()
-        # empilha filhos em ordem reversa para preservar a ordem original na saída
         for child in reversed(children):
             self._stack.append(child)
 
         return current
+
+
+# ======================
+# padrão Visitor
+# ======================
+
+class NodeVisitor(ABC):
+    """Interface base para visitantes da árvore."""
+
+    @abstractmethod
+    def visit_decision_node(self, node: DecisionNode) -> None:
+        ...
+
+    @abstractmethod
+    def visit_leaf_node(self, node: LeafNode) -> None:
+        ...
+
+
+class DepthVisitor(NodeVisitor):
+    """
+    Visitor que calcula a profundidade máxima (mock) da árvore.
+    Usa prints para mostrar o fluxo da travessia.
+    """
+
+    def __init__(self) -> None:
+        self.max_depth = 0
+        self._current_depth = 0
+
+    def visit_decision_node(self, node: DecisionNode) -> None:
+        print(f"[DepthVisitor] Entrando em nó de decisão '{node.name}' na profundidade {self._current_depth}.")
+        self._current_depth += 1
+        self.max_depth = max(self.max_depth, self._current_depth)
+
+        for child in node.get_children():
+            child.accept(self)
+
+        self._current_depth -= 1
+        print(f"[DepthVisitor] Saindo do nó de decisão '{node.name}' para profundidade {self._current_depth}.")
+
+    def visit_leaf_node(self, node: LeafNode) -> None:
+        print(f"[DepthVisitor] Visitando nó folha '{node.name}' na profundidade {self._current_depth + 1}.")
+        self.max_depth = max(self.max_depth, self._current_depth + 1)
