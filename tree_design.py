@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Iterator
-
+from typing import Optional
 
 class Node(ABC):
     def __init__(self, name: str) -> None:
@@ -134,3 +134,27 @@ class DepthVisitor(NodeVisitor):
     def visit_leaf_node(self, node: LeafNode) -> None:
         print(f"[DepthVisitor] Visitando nó folha '{node.name}' na profundidade {self._current_depth + 1}.")
         self.max_depth = max(self.max_depth, self._current_depth + 1)
+
+class TreeBuilderState(ABC):
+    """
+    Interface base para os estados do processo de construção da árvore.
+    """
+
+    @abstractmethod
+    def handle(self, builder: "TreeBuilder", node: Node) -> None:
+        """
+        Executa a lógica do estado atual sobre o nó.
+        Tudo mock, apenas com prints.
+        """
+        ...
+
+
+class SplittingState(TreeBuilderState):
+    """
+    Estado responsável pela fase de 'divisão' dos nós (mock).
+    """
+
+    def handle(self, builder: "TreeBuilder", node: Node) -> None:
+        print(f"[SplittingState] Avaliando se o nó '{node.name}' deve ser dividido...")
+        print(f"[SplittingState] 'Dividindo' (mock) o nó '{node.name}'.")
+
