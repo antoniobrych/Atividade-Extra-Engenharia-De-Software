@@ -158,3 +158,15 @@ class SplittingState(TreeBuilderState):
         print(f"[SplittingState] Avaliando se o nó '{node.name}' deve ser dividido...")
         print(f"[SplittingState] 'Dividindo' (mock) o nó '{node.name}'.")
 
+class StoppingState(TreeBuilderState):
+    def handle(self, builder: "TreeBuilder", node: Node) -> None:
+        print(f"[StoppingState] Verificando critério de parada para o nó '{node.name}'.")
+        print(f"[StoppingState] Critério de parada atingido (mock). Iniciando poda.")
+        builder.change_state(PruningState())
+
+
+class PruningState(TreeBuilderState):
+    def handle(self, builder: "TreeBuilder", node: Node) -> None:
+        print(f"[PruningState] Avaliando se o nó '{node.name}' deve ser podado.")
+        print(f"[PruningState] Poda (mock) concluída para o nó '{node.name}'. Processo de construção encerrado.")
+        builder.change_state(None)
