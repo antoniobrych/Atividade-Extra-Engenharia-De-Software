@@ -170,3 +170,32 @@ class PruningState(TreeBuilderState):
         print(f"[PruningState] Avaliando se o nó '{node.name}' deve ser podado.")
         print(f"[PruningState] Poda (mock) concluída para o nó '{node.name}'. Processo de construção encerrado.")
         builder.change_state(None)
+        
+class TreeBuilder:
+    """
+    Contexto do padrão State.
+    Controla o ciclo de construção da árvore via estados mock.
+    """
+
+    def __init__(self) -> None:
+        self.state: Optional[TreeBuilderState] = SplittingState()
+        print("[TreeBuilder] Iniciado no estado SplittingState.")
+
+    def change_state(self, new_state: Optional[TreeBuilderState]) -> None:
+        old = type(self.state).__name__ if self.state else "None"
+        new = type(new_state).__name__ if new_state else "None"
+        print(f"[TreeBuilder] Transição de estado: {old} -> {new}.")
+        self.state = new_state
+
+    def build(self, root: Node) -> None:
+        """
+        Inicia o processo de "construção" da árvore.
+        Totalmente mock: apenas executa a sequência Splitting -> Stopping -> Pruning.
+        """
+        print("[TreeBuilder] Iniciando processo de construção da árvore (mock).")
+        current_node = root
+
+        while self.state is not None:
+            self.state.handle(self, current_node)
+
+        print("[TreeBuilder] Processo de construção finalizado (mock).")
