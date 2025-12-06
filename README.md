@@ -45,7 +45,14 @@ Coordenado pelo contexto:
 
 - `TreeBuilder`
 
----
+## Exemplo de Uso
+```python
+root = DecisionNode("Raiz", "x > 10")
+child1 = DecisionNode("Nó A", "y < 5")
+child2 = LeafNode("Nó B", "Classe 1")
+child3 = LeafNode("Nó C", "Classe 2")
 
-# Estrutura do Projeto
+root.add_child(child1)
+root.add_child(child2)
+child1.add_child(child3)
 
